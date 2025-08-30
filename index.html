@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>55 бизнес-моделей</title>
+    <title>Форма для n8n Webhook</title>
     <!-- Подключение Tailwind CSS через CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -17,8 +17,8 @@
 
     <!-- Контейнер формы -->
     <div class="bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
-        <h1 class="text-3xl font-bold mb-6 text-center text-indigo-400">55 бизнес-моделей</h1>
-        <p class="text-center text-slate-400 mb-6">Штурм по направлению деятельности</p>
+        <h1 class="text-3xl font-bold mb-6 text-center text-indigo-400">AI Бизнес-модель</h1>
+        <p class="text-center text-slate-400 mb-6">Создайте детальную бизнес-модель с помощью искусственного интеллекта</p>
 
         <!-- Форма -->
         <form id="submissionForm" class="space-y-6">
@@ -57,7 +57,7 @@
                 type="submit"
                 class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
             >
-                НАЧАТЬ ШТУРМ
+                СОЗДАТЬ БИЗНЕС-МОДЕЛЬ
             </button>
         </form>
 
@@ -76,7 +76,7 @@
             event.preventDefault();
 
             // Отображаем сообщение о загрузке
-            statusMessage.textContent = 'Обработка...';
+            statusMessage.textContent = 'Создание бизнес-модели... Это может занять несколько минут.';
             statusMessage.className = 'mt-6 text-center text-sm font-medium text-indigo-400';
 
             // Создаем объект FormData из данных формы
@@ -84,8 +84,8 @@
             // Преобразуем FormData в обычный JavaScript-объект
             const data = Object.fromEntries(formData.entries());
 
-            // URL вашего webhook из n8n, вставленный по вашему запросу
-            const webhookUrl = 'https://n8n.szubarev.kz/webhook/business-model';
+            // URL вашего webhook из n8n
+            const webhookUrl = 'https://n8n.szubarev.kz/webhook-test/business-model';
 
             try {
                 // Отправляем данные с помощью Fetch API
@@ -95,18 +95,51 @@
                         'Content-Type': 'application/json',
                         'Origin': window.location.origin
                     },
+                    mode: 'cors',
                     body: JSON.stringify(data), // Отправляем данные в формате JSON
                 });
 
                 if (response.ok) {
-                    // Успешная отправка
-                    statusMessage.textContent = 'Данные успешно отправлены!';
+                    // Обработка успешного ответа и скачивание файла
+                    statusMessage.textContent = 'Данные успешно обработаны. Подготовка файла...';
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-green-500';
+                    
+                    const blob = await response.blob();
+                    
+                    if (blob.size === 0) {
+                        statusMessage.textContent = 'Ошибка: получен пустой файл. Пожалуйста, проверьте ваш n8n-workflow.';
+                        statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-500';
+                        return;
+                    }
+                    
+                    const url = window.URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    
+                    const contentDisposition = response.headers.get('Content-Disposition');
+                    let filename = 'бизнес-модель.xlsx';
+                    if (contentDisposition) {
+                        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+                        if (filenameMatch && filenameMatch.length > 1) {
+                            filename = filenameMatch[1];
+                        }
+                    }
+                    a.download = filename;
+                    
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    window.URL.revokeObjectURL(url);
+                    
+                    statusMessage.textContent = 'Файл успешно скачан!';
                     statusMessage.className = 'mt-6 text-center text-sm font-medium text-green-500';
                     form.reset(); // Сбрасываем форму после успешной отправки
                 } else {
                     // Ошибка на стороне сервера
                     const errorText = await response.text();
-                    statusMessage.textContent = `Ошибка: ${response.status} - ${errorText || 'Не удалось отправить данные.'}`;
+                    statusMessage.textContent = `Ошибка: ${response.status} - ${errorText || 'Не удалось получить файл.'}`;
                     statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-500';
                 }
             } catch (error) {
