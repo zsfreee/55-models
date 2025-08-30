@@ -85,7 +85,7 @@
             const data = Object.fromEntries(formData.entries());
 
             // URL вашего webhook из n8n, вставленный по вашему запросу
-            const webhookUrl = 'https://n8n.szubarev.kz/webhook-test/business-model';
+            const webhookUrl = 'https://n8n.szubarev.kz/webhook/business-model';
 
             try {
                 // Отправляем данные с помощью Fetch API
@@ -93,6 +93,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Origin': window.location.origin
                     },
                     body: JSON.stringify(data), // Отправляем данные в формате JSON
                 });
