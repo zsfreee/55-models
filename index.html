@@ -3,258 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор бизнес-моделей</title>
+    <title>Форма для n8n Webhook</title>
+    <!-- Подключение Tailwind CSS через CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        /* Дополнительные стили для шрифта Inter */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-        }
-        
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.2rem;
-            font-weight: 700;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
-        
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .required {
-            color: #e74c3c;
-        }
-        
-        button {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-        
-        button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-            color: #667eea;
-            font-weight: 600;
-        }
-        
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error {
-            background: #ffe6e6;
-            border: 1px solid #ff9999;
-            color: #cc0000;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            display: none;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-                margin: 10px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>AI Бизнес-модель</h1>
-        <p class="subtitle">Создайте детальную бизнес-модель с помощью искусственного интеллекта</p>
-        
-        <form id="businessForm" method="POST" action="https://n8n.szubarev.kz/webhook-test/business-model">
-            <div class="form-group">
-                <label for="direction">
-                    Направление деятельности <span class="required">*</span>
-                </label>
-                <input 
-                    type="text" 
-                    id="direction" 
-                    name="направление деятельности"
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
+
+    <!-- Контейнер формы -->
+    <div class="bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <h1 class="text-3xl font-bold mb-6 text-center text-indigo-400">AI Бизнес-модель</h1>
+        <p class="text-center text-slate-400 mb-6">Создайте детальную бизнес-модель с помощью искусственного интеллекта</p>
+
+        <!-- Форма -->
+        <form id="submissionForm" class="space-y-6">
+            <div>
+                <label for="direction" class="block text-sm font-medium text-slate-300">Направление деятельности <span class="text-red-500">*</span></label>
+                <input
+                    type="text"
+                    id="direction"
+                    name="Направление деятельности"
                     placeholder="Например: Кофейня, IT-консалтинг, Стоматология..."
+                    class="mt-1 block w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
                     required
                 >
             </div>
-            
-            <div class="form-group">
-                <label for="products">
-                    Продукты / услуги компании
-                </label>
-                <input 
-                    type="text" 
-                    id="products" 
-                    name="продукты / услуги компании"
+            <div>
+                <label for="product" class="block text-sm font-medium text-slate-300">Продукты / услуги компании</label>
+                <input
+                    type="text"
+                    id="product"
+                    name="Продукты / услуги компании"
                     placeholder="Продажа еды и напитков, консультации..."
+                    class="mt-1 block w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
                 >
             </div>
-            
-            <div class="form-group">
-                <label for="geo">
-                    ГЕО покрытие компании
-                </label>
-                <input 
-                    type="text" 
-                    id="geo" 
+            <div>
+                <label for="geo" class="block text-sm font-medium text-slate-300">ГЕО покрытие компании</label>
+                <input
+                    type="text"
+                    id="geo"
                     name="ГЕО покрытие компании"
                     placeholder="Алматы, Астана, Казахстан, весь мир..."
+                    class="mt-1 block w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
                 >
             </div>
-            
-            <button type="submit" id="submitBtn">
-                Создать бизнес-модель
+            <button
+                type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
+            >
+                СОЗДАТЬ БИЗНЕС-МОДЕЛЬ
             </button>
-            
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                Генерируем вашу бизнес-модель...
-            </div>
-            
-            <div class="error" id="error">
-                Произошла ошибка. Попробуйте еще раз.
-            </div>
         </form>
+
+        <!-- Сообщение о статусе -->
+        <div id="statusMessage" class="mt-6 text-center text-sm font-medium"></div>
     </div>
 
     <script>
-        document.getElementById('businessForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const loading = document.getElementById('loading');
-            const error = document.getElementById('error');
-            
-            // Показываем загрузку
-            submitBtn.disabled = true;
-            loading.style.display = 'block';
-            error.style.display = 'none';
-            
-            const formData = new FormData(this);
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        // Получаем элементы формы
+        const form = document.getElementById('submissionForm');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Добавляем обработчик события отправки формы
+        form.addEventListener('submit', async (event) => {
+            // Предотвращаем стандартное поведение формы (перезагрузку страницы)
+            event.preventDefault();
+
+            // Отображаем сообщение о загрузке
+            statusMessage.textContent = 'Отправка...';
+            statusMessage.className = 'mt-6 text-center text-sm font-medium text-indigo-400';
+
+            // Создаем объект FormData из данных формы
+            const formData = new FormData(form);
+            // Преобразуем FormData в обычный JavaScript-объект
+            const data = Object.fromEntries(formData.entries());
+
+            // URL вашего webhook из n8n, вставленный по вашему запросу
+            const webhookUrl = 'https://n8n.szubarev.kz/webhook-test/business-model';
+
+            try {
+                // Отправляем данные с помощью Fetch API
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data), // Отправляем данные в формате JSON
+                });
+
+                if (response.ok) {
+                    // Успешная отправка
+                    statusMessage.textContent = 'Данные успешно отправлены!';
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-green-500';
+                    form.reset(); // Сбрасываем форму после успешной отправки
+                } else {
+                    // Ошибка на стороне сервера
+                    const errorText = await response.text();
+                    statusMessage.textContent = `Ошибка: ${response.status} - ${errorText || 'Не удалось отправить данные.'}`;
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-500';
                 }
-                return response.blob();
-            })
-            .then(blob => {
-                // Создаем ссылку для скачивания файла
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'business-model.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                
-                // Скрываем загрузку
-                loading.style.display = 'none';
-                submitBtn.disabled = false;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                loading.style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                submitBtn.disabled = false;
-            });
+            } catch (error) {
+                // Ошибка сети или другая ошибка
+                statusMessage.textContent = `Сетевая ошибка: ${error.message}`;
+                statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-500';
+            }
         });
     </script>
+
 </body>
 </html>
